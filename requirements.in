@@ -1,6 +1,7 @@
 pip-tools
 langchain
 langchain-community
+langchain-cohere
+cohere
 faiss-cpu
-openai
 python-dotenv
