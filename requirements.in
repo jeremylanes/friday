@@ -3,5 +3,7 @@ langchain
 langchain-community
 langchain-cohere
 cohere
+langchain-groq
+groq
 faiss-cpu
 python-dotenv
