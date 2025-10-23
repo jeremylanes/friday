@@ -48,7 +48,7 @@ def main():
             break
 
         result = chain.invoke({"question": query})
-        print(f"🤖 Bot : {result['answer']}\n")
+        print(f"🤖 Friday : {result['answer']}\n")
 
 
 if __name__ == "__main__":
