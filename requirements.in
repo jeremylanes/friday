@@ -1,0 +1,6 @@
+pip-tools
+langchain
+langchain-community
+faiss-cpu
+openai
+python-dotenv
