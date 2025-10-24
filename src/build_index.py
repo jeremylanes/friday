@@ -1,5 +1,10 @@
 """
-build_index.py - Index Marvel with Cohere embeddings (free tier) + FAISS
+Friday - Knowledge Base Builder for Marvel Universe
+
+This module handles the creation and management of the vector database used by Friday,
+the Marvel knowledge assistant. It processes text files containing Marvel facts,
+splits them into chunks, generates embeddings using Cohere, and stores them in a
+FAISS index for efficient similarity search.
 """
 
 import os
@@ -16,7 +21,19 @@ DB_DIR = "db"
 os.makedirs(DB_DIR, exist_ok=True)
 
 def build_index():
-    print("🔨 Building Marvel index with Cohere...")
+    """
+    Build and save the FAISS index for Friday's knowledge base.
+    
+    This function:
+    1. Loads Marvel facts from text files in the data directory
+    2. Splits the content into manageable chunks
+    3. Generates embeddings using Cohere's multilingual model
+    4. Creates and saves a FAISS index for efficient similarity search
+    
+    The resulting index is saved to 'db/marvel_index' and used by Friday to answer
+    questions about the Marvel Universe.
+    """
+    print("🔨 Building Friday's Marvel knowledge base with Cohere embeddings...")
 
     files = ["mcu_facts.txt", "comics_facts.txt"]
     splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)

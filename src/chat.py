@@ -1,5 +1,10 @@
 """
-chat.py - Marvel chatbot (retrieval + memory) using FAISS + Cohere + Groq
+Friday - A Marvel knowledge assistant inspired by Tony Stark's AI assistant.
+
+This module implements a conversational AI assistant specialized in Marvel Universe knowledge,
+using FAISS for vector search, Cohere for embeddings, and Groq for LLM inference.
+The assistant maintains conversation context and can answer questions about Marvel characters,
+stories, and lore.
 """
 
 import os
@@ -15,7 +20,17 @@ load_dotenv()
 DB_DIR = "db/marvel_index"
 
 def main():
-    print("🤖 Marvel Chat — powered by Groq + Cohere\n")
+    """
+    Main function to run the Friday Marvel assistant.
+    
+    Initializes the conversation chain, loads the vector database, and handles the
+    interactive chat loop. The assistant will respond to user queries about the
+    Marvel Universe using the knowledge base.
+    
+    Commands:
+        exit or quit: Terminate the chat session
+    """
+    print("🤖 Friday - Your Marvel Knowledge Assistant (powered by Groq + Cohere)\n")
     print("Type 'exit' to quit.\n")
 
     # Load embeddings and database
@@ -43,7 +58,7 @@ def main():
 
     # Chat loop
     while True:
-        query = input("🧑‍💬 Toi : ").strip()
+        query = input("🧑‍💬 You: ").strip()
         if query.lower() in {"exit", "quit"}:
             print("👋 Goodbye!")
             break
