@@ -1,5 +1,5 @@
 """
-build_index.py — index Marvel avec Cohere embeddings (gratuits) + FAISS
+build_index.py - Index Marvel with Cohere embeddings (free tier) + FAISS
 """
 
 import os
@@ -16,7 +16,7 @@ DB_DIR = "db"
 os.makedirs(DB_DIR, exist_ok=True)
 
 def build_index():
-    print("🔨 Construction de l'index Marvel avec Cohere...")
+    print("🔨 Building Marvel index with Cohere...")
 
     files = ["mcu_facts.txt", "comics_facts.txt"]
     splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
@@ -24,19 +24,22 @@ def build_index():
 
     for f in files:
         path = os.path.join(DATA_DIR, f)
-        print(f"📖 Lecture de {path}")
+        print(f"📖 Reading {path}")
+
         loader = TextLoader(path, encoding="utf-8")
         docs = loader.load()
+
         chunks = splitter.split_documents(docs)
+
         all_docs.extend(chunks)
 
-    print("🧠 Génération des embeddings (Cohere)...")
+    print("🧠 Generating embeddings (Cohere)...")
     embeddings = CohereEmbeddings(model="embed-multilingual-v3.0")
 
     db = FAISS.from_documents(all_docs, embeddings)
     db.save_local(os.path.join(DB_DIR, "marvel_index"))
 
-    print("✅ Index sauvegardé → db/marvel_index")
+    print("✅ Index saved → db/marvel_index")
 
 if __name__ == "__main__":
     build_index()

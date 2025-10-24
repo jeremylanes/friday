@@ -1,5 +1,5 @@
 """
-chat.py — chatbot Marvel (retrieval + mémoire) utilisant FAISS + Cohere + Groq
+chat.py - Marvel chatbot (retrieval + memory) using FAISS + Cohere + Groq
 """
 
 import os
@@ -15,24 +15,25 @@ load_dotenv()
 DB_DIR = "db/marvel_index"
 
 def main():
-    print("🤖 Marvel Chat — propulsé par Groq + Cohere\n")
-    print("Tape 'exit' pour quitter.\n")
+    print("🤖 Marvel Chat — powered by Groq + Cohere\n")
+    print("Type 'exit' to quit.\n")
 
-    # Charger embeddings + base
+    # Load embeddings and database
     embeddings = CohereEmbeddings(model="embed-multilingual-v3.0")
     db = FAISS.load_local(DB_DIR, embeddings, allow_dangerous_deserialization=True)
+
     retriever = db.as_retriever(search_kwargs={"k": 3})
 
-    # Config LLM (Groq)
+    # LLM Configuration (Groq)
     llm = ChatGroq(model="openai/gpt-oss-20b", temperature=0.3)
 
-    # Mémoire conversationnelle
+    # Conversation memory
     memory = ConversationBufferMemory(
         memory_key="chat_history",
         return_messages=True
     )
 
-    # Chaîne principale
+    # Main chain
     chain = ConversationalRetrievalChain.from_llm(
         llm=llm,
         retriever=retriever,
@@ -40,15 +41,15 @@ def main():
         verbose=False
     )
 
-    # Boucle de chat
+    # Chat loop
     while True:
         query = input("🧑‍💬 Toi : ").strip()
         if query.lower() in {"exit", "quit"}:
-            print("👋 À plus !")
+            print("👋 Goodbye!")
             break
 
         result = chain.invoke({"question": query})
-        print(f"🤖 Friday : {result['answer']}\n")
+        print(f"🤖 Friday: {result['answer']}\n")
 
 
 if __name__ == "__main__":
