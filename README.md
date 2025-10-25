@@ -63,8 +63,8 @@ friday/
 COHERE_API_KEY=your_cohere_api_key
 GROQ_API_KEY=your_groq_api_key
 ```
-- 🔹 Get **Cohere** key: Cohere Dashboard (free tier) https://dashboard.cohere.com/api-keys
-- 🔹 Get **Groq** key: Groq Console https://console.groq.com/
+- 🔹 Get **Cohere** key: [Cohere Dashboard (free tier)](https://dashboard.cohere.com/api-keys)
+- 🔹 Get **Groq** key: [Groq Console](https://console.groq.com/)
 
 ## 🗃️ Building the Knowledge Base (FAISS Index)
 Before chatting, generate the embeddings database:
