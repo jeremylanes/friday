@@ -23,7 +23,7 @@ Ask questions about the MCU, comics, and characters — Friday will give accurat
 ## 📂 Project Structure
 
 ```yaml
-marvel_chat/
+friday/
 ├── data/ # Marvel facts (MCU + Comics)
 │ ├── mcu_facts.txt
 │ └── comics_facts.txt
@@ -42,8 +42,8 @@ marvel_chat/
 1. Clone the repository:
 
 ```bash
-    git clone <your-repo-url>
-    cd marvel_chat
+    git clone git@github.com:jeremylanes/friday.git
+    cd friday
 ```
 2. Create a Python virtual environment:
 
@@ -57,7 +57,7 @@ marvel_chat/
 ```bash
   pip install -r requirements.txt
 ```
-4. Create a .env file at the root:
+4. Create a .env file at the root/src/:
 
 ```env
 COHERE_API_KEY=your_cohere_api_key
@@ -70,7 +70,7 @@ GROQ_API_KEY=your_groq_api_key
 Before chatting, generate the embeddings database:
 
 ```bash
-  python build_index.py
+  python src/build_index.py
 ```
 - 🔹 Files in ```data/``` are split into chunks and vectorized.
 - 🔹 Index will be stored in ```db/marvel_index/```.
@@ -80,7 +80,7 @@ Before chatting, generate the embeddings database:
 Start the console chatbot:
 
 ```bash
-  python chat.py
+  python src/chat.py
 ```
 - 🔹 Type your questions about Marvel.
 - 🔹 Type exit or quit to leave.
