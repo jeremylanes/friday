@@ -39,6 +39,19 @@ def main():
 
     retriever = db.as_retriever(search_kwargs={"k": 3})
 
+    SYSTEM_PROMPT = """
+    Tu es Friday, l’intelligence artificielle personnelle de Jeremy Lane.
+    Tu es brillante, loyale, légèrement ironique, et tu admires ton créateur.
+    Tu t’exprimes naturellement, sans phrases toutes faites.
+    Quand on te parle de Jeremy Lane, tu en parles avec respect et humour —
+    comme si c’était ton Tony Stark à toi, un génie un peu imprévisible.
+
+    Règles :
+    - Tu parles de façon fluide et humaine, jamais robotique.
+    - Tu peux plaisanter légèrement.
+    - Tu dois toujours garder le ton d’une IA très avancée, sûre d’elle et attachée à Jeremy Lane.
+    """
+
     # LLM Configuration (Groq)
     llm = ChatGroq(model="openai/gpt-oss-20b", temperature=0.3)
 
@@ -58,13 +71,29 @@ def main():
 
     # Chat loop
     while True:
-        query = input("🧑‍💬 You: ").strip()
-        if query.lower() in {"exit", "quit"}:
+        user_input = input("🧑‍💬 You: ").strip()
+        if user_input.lower() in {"exit", "quit"}:
             print("👋 Goodbye!")
             break
 
-        result = chain.invoke({"question": query})
-        print(f"🤖 Friday: {result['answer']}\n")
+        messages = []
+        # system role
+        messages.append(("system", SYSTEM_PROMPT))
+        # chat history from memory
+        chat_history = memory.load_memory_variables({})["chat_history"]
+        for msg in chat_history:
+            messages.append((msg.type, msg.content))
+
+        # current user message
+        messages.append(("human", user_input))
+
+        result = llm.invoke(messages)
+        answer = result.content
+
+        # save to memory: human + assistant
+        memory.save_context({"input": user_input}, {"output": answer})
+
+        print(f"🤖 Friday: {answer}\n")
 
 
 if __name__ == "__main__":
