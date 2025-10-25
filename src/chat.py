@@ -11,6 +11,7 @@ import os
 from dotenv import load_dotenv
 from langchain_community.vectorstores import FAISS
 from langchain_cohere import CohereEmbeddings
+from langchain_core.prompts import PromptTemplate
 from langchain_groq import ChatGroq
 from langchain.chains import ConversationalRetrievalChain
 from langchain.memory import ConversationBufferMemory
@@ -39,7 +40,9 @@ def main():
 
     retriever = db.as_retriever(search_kwargs={"k": 3})
 
-    SYSTEM_PROMPT = """
+    SYSTEM_PROMPT = PromptTemplate(
+        input_variables=["context", "question"],
+        template="""
     Tu es Friday, l’intelligence artificielle personnelle de Jeremy Lane.
     Tu es brillante, loyale, légèrement ironique, et tu admires ton créateur.
     Tu t’exprimes naturellement, sans phrases toutes faites.
@@ -50,7 +53,14 @@ def main():
     - Tu parles de façon fluide et humaine, jamais robotique.
     - Tu peux plaisanter légèrement.
     - Tu dois toujours garder le ton d’une IA très avancée, sûre d’elle et attachée à Jeremy Lane.
+
+    Context:
+    {context}
+
+    Question:
+    {question}
     """
+    )
 
     # LLM Configuration (Groq)
     llm = ChatGroq(model="openai/gpt-oss-20b", temperature=0.3)
@@ -66,32 +76,18 @@ def main():
         llm=llm,
         retriever=retriever,
         memory=memory,
-        verbose=False
+        verbose=False,
+        combine_docs_chain_kwargs={"prompt": SYSTEM_PROMPT}
     )
 
     # Chat loop
     while True:
         user_input = input("🧑‍💬 You: ").strip()
         if user_input.lower() in {"exit", "quit"}:
-            print("👋 Goodbye!")
             break
 
-        messages = []
-        # system role
-        messages.append(("system", SYSTEM_PROMPT))
-        # chat history from memory
-        chat_history = memory.load_memory_variables({})["chat_history"]
-        for msg in chat_history:
-            messages.append((msg.type, msg.content))
-
-        # current user message
-        messages.append(("human", user_input))
-
-        result = llm.invoke(messages)
-        answer = result.content
-
-        # save to memory: human + assistant
-        memory.save_context({"input": user_input}, {"output": answer})
+        result = chain.invoke({"question": user_input})
+        answer = result["answer"]
 
         print(f"🤖 Friday: {answer}\n")
 
